@@ -12,4 +12,5 @@ public class CustomerEnterprise {
 	private String reasonSocial;
 	private String owner;
 	private String address;
+
 }

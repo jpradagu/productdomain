@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
+import com.nttdata.bootcamp.productdomain.service.PersonalBankLoanService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,33 +22,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
-import com.nttdata.bootcamp.productdomain.model.BankLoan;
-import com.nttdata.bootcamp.productdomain.service.BankLoanService;
+import com.nttdata.bootcamp.productdomain.model.PersonalBankLoan;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 @RestController
-@RequestMapping("/api/product/bank-loan")
-public class BankLoanController {
+@RequestMapping("/api/product/personal-bank-loan")
+public class PersonalBankLoanController {
 
 	@Autowired
-	private BankLoanService loanService;
+	private PersonalBankLoanService loanService;
 	
 	@GetMapping
-	public Mono<ResponseEntity<Flux<BankLoan>>> findAll() {
+	public Mono<ResponseEntity<Flux<PersonalBankLoan>>> findAll() {
 		return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(loanService.findAll()));
 	}
 	
 	@GetMapping("/{id}")
-	public Mono<ResponseEntity<BankLoan>> findById(@PathVariable String id) {
+	public Mono<ResponseEntity<PersonalBankLoan>> findById(@PathVariable String id) {
 		return loanService.findById(id)
 				.map(ce -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(ce))
 				.defaultIfEmpty(ResponseEntity.notFound().build());
 	}
 	
 	@PostMapping
-	public Mono<ResponseEntity<Map<String, Object>>> create(@Valid @RequestBody Mono<BankLoan> monoAccount) {
+	public Mono<ResponseEntity<Map<String, Object>>> create(@Valid @RequestBody Mono<PersonalBankLoan> monoAccount) {
 		Map<String, Object> result = new HashMap<>();
 		return monoAccount.flatMap(a -> {
 			a.setId(null);
@@ -66,7 +67,7 @@ public class BankLoanController {
 	}
 	
 	@PutMapping("/{id}")
-	public Mono<ResponseEntity<BankLoan>> update(@RequestBody BankLoan account, @PathVariable String id){
+	public Mono<ResponseEntity<PersonalBankLoan>> update(@RequestBody PersonalBankLoan account, @PathVariable String id){
 		return loanService.findById(id).flatMap(c-> loanService.save(c)).map(p->ResponseEntity.ok()
 				.contentType(MediaType.APPLICATION_JSON)
 				.body(p))
