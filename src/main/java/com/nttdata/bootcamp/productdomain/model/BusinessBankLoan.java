@@ -14,7 +14,7 @@ public class BusinessBankLoan {
     @Id
     private String id;
     private String numberAccount;
-    private CustomerEnterprise customer;
+    private CommercialCustomer customer;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
     private Integer quotaNumber;

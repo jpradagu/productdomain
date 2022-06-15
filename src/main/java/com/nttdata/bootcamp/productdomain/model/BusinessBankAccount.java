@@ -14,7 +14,7 @@ import java.util.List;
 public class BusinessBankAccount {
     @Id
     private String id;
-    private CustomerEnterprise customer;
+    private CommercialCustomer customer;
     private String numberAccount;
     private BigDecimal amount;
     @NotEmpty

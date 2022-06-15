@@ -9,7 +9,7 @@ import lombok.Data;
 import javax.validation.constraints.NotNull;
 
 @Data
-public class CustomerPersonal {
+public class PersonalCustomer {
 	@NotNull
 	private String id;
 	private String dni;

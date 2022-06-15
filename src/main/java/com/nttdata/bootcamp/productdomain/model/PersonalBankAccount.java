@@ -13,7 +13,7 @@ public class PersonalBankAccount {
 
     @Id
     private String id;
-    private CustomerPersonal customer;
+    private PersonalCustomer customer;
     @NotNull
     private String numberAccount;
     private BigDecimal amount;

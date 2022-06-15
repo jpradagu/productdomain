@@ -1,6 +1,6 @@
 package com.nttdata.bootcamp.productdomain.service;
 
-import com.nttdata.bootcamp.productdomain.model.CustomerPersonal;
+import com.nttdata.bootcamp.productdomain.model.PersonalCustomer;
 import com.nttdata.bootcamp.productdomain.model.PersonalBankAccount;
 import com.nttdata.bootcamp.productdomain.repository.PersonalBankAccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +54,7 @@ public class PersonalBankAccountService {
                 .uri("http://customerdomain/api/customer/personal/{id}",
                         Collections.singletonMap("id", account.getCustomer().getId()))
                 .accept(MediaType.APPLICATION_JSON)
-                .retrieve().bodyToMono(CustomerPersonal.class)
+                .retrieve().bodyToMono(PersonalCustomer.class)
                 .flatMap(p -> accountRepository.findAllByCustomerId(p.getId()).collectList().flatMap(r -> {
                     if (r.size() == 0) {
                         switch (account.getTypeAccountBank()) {
@@ -85,7 +85,7 @@ public class PersonalBankAccountService {
     public Flux<PersonalBankAccount> findAllByCustomer(String id) {
         return webClient.build().get()
                 .uri("http://customerdomain/api/customer/personal/{id}", Collections.singletonMap("id", id))
-                .accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CustomerPersonal.class)
+                .accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(PersonalCustomer.class)
                 .flatMap(p -> accountRepository.findAllByCustomerId(p.getId()));
     }
 }

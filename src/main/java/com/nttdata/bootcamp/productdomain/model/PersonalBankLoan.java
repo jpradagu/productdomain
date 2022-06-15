@@ -14,7 +14,7 @@ public class PersonalBankLoan {
 	@Id
 	private String id;
 	private String numberAccount;
-	private CustomerPersonal customer;
+	private PersonalCustomer customer;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date startDate;
 	private Integer quotaNumber;

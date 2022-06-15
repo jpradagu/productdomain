@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.nttdata.bootcamp.productdomain.model.BusinessBankAccount;
-import com.nttdata.bootcamp.productdomain.model.CustomerEnterprise;
+import com.nttdata.bootcamp.productdomain.model.CommercialCustomer;
 import com.nttdata.bootcamp.productdomain.model.TypeAccountBank;
 import com.nttdata.bootcamp.productdomain.repository.BusinessBankAccountRepository;
 
@@ -46,7 +46,7 @@ public class BusinessBankAccountService {
 		return webClient.build().get()
 				.uri("http://customerdomain/api/customer/enterprise/{id}",
 						Collections.singletonMap("id", account.getCustomer().getId()))
-				.accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(CustomerEnterprise.class).flatMap(e -> {
+				.accept(MediaType.APPLICATION_JSON).retrieve().bodyToMono(CommercialCustomer.class).flatMap(e -> {
 					if (account.getTypeAccountBank() == TypeAccountBank.CHECKING_ACCOUNT) {
 						account.setMaintenanceCommission(new BigDecimal(maintanceFeeCheckingAccount));
 						account.setMonthlyCommissionLimit(monthlyCommissionLimitCheckingAccount);
@@ -65,7 +65,7 @@ public class BusinessBankAccountService {
 	public Flux<BusinessBankAccount> findAllByCustomer(String id) {
 		return webClient.build().get()
 				.uri("http://customerdomain/api/customer/enterprise/{id}", Collections.singletonMap("id", id))
-				.accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CustomerEnterprise.class)
+				.accept(MediaType.APPLICATION_JSON).retrieve().bodyToFlux(CommercialCustomer.class)
 				.flatMap(p -> accountRepository.findAllByCustomerId(p.getId()));
 	}
 }

@@ -32,50 +32,53 @@ import reactor.core.publisher.Mono;
 @RequestMapping("/api/product/personal-bank-loan")
 public class PersonalBankLoanController {
 
-	@Autowired
-	private PersonalBankLoanService loanService;
-	
-	@GetMapping
-	public Mono<ResponseEntity<Flux<PersonalBankLoan>>> findAll() {
-		return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(loanService.findAll()));
-	}
-	
-	@GetMapping("/{id}")
-	public Mono<ResponseEntity<PersonalBankLoan>> findById(@PathVariable String id) {
-		return loanService.findById(id)
-				.map(ce -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(ce))
-				.defaultIfEmpty(ResponseEntity.notFound().build());
-	}
-	
-	@PostMapping
-	public Mono<ResponseEntity<Map<String, Object>>> create(@Valid @RequestBody Mono<PersonalBankLoan> monoAccount) {
-		Map<String, Object> result = new HashMap<>();
-		return monoAccount.flatMap(a -> {
-			a.setId(null);
-			return loanService.save(a).map(account -> ResponseEntity.created(URI.create("/api/product/bank-loan/".concat(account.getId())))
-					.contentType(MediaType.APPLICATION_JSON).body(result));
-		}).onErrorResume(t -> Mono.just(t).cast(WebExchangeBindException.class)
-				.flatMap(e -> Mono.just(e.getFieldErrors()))
-				.flatMapMany(Flux::fromIterable)
-				.map(fieldError -> "El campo " + fieldError.getField() + " " + fieldError.getDefaultMessage())
-				.collectList().flatMap(list -> {
-					result.put("errors", list);
-					result.put("timestamp", new Date());
-					result.put("status", HttpStatus.BAD_REQUEST.value());
-					return Mono.just(ResponseEntity.badRequest().body(result));
-				}));
-	}
-	
-	@PutMapping("/{id}")
-	public Mono<ResponseEntity<PersonalBankLoan>> update(@RequestBody PersonalBankLoan account, @PathVariable String id){
-		return loanService.findById(id).flatMap(c-> loanService.save(c)).map(p->ResponseEntity.ok()
-				.contentType(MediaType.APPLICATION_JSON)
-				.body(p))
-		.defaultIfEmpty(ResponseEntity.notFound().build());
-	}
-	
-	@DeleteMapping("/{id}")
-	public Mono<ResponseEntity<Void>> eliminar(@PathVariable String id){
-		return loanService.findById(id).flatMap(e -> loanService.delete(e).then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT)))).defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
+    @Autowired
+    private PersonalBankLoanService loanService;
+
+    @GetMapping
+    public Mono<ResponseEntity<Flux<PersonalBankLoan>>> findAll() {
+        return Mono.just(ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(loanService.findAll()));
+    }
+
+    @GetMapping("/{id}")
+    public Mono<ResponseEntity<PersonalBankLoan>> findById(@PathVariable String id) {
+        return loanService.findById(id)
+                .map(ce -> ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(ce))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping
+    public Mono<ResponseEntity<Map<String, Object>>> create(@Valid @RequestBody Mono<PersonalBankLoan> monoAccount) {
+        Map<String, Object> result = new HashMap<>();
+        return monoAccount.flatMap(a -> {
+            a.setId(null);
+            return loanService.save(a).map(account -> ResponseEntity.created(URI.create("/api/product/bank-loan/".concat(account.getId())))
+                    .contentType(MediaType.APPLICATION_JSON).body(result));
+        }).onErrorResume(t -> Mono.just(t).cast(WebExchangeBindException.class)
+                .flatMap(e -> Mono.just(e.getFieldErrors()))
+                .flatMapMany(Flux::fromIterable)
+                .map(fieldError -> "El campo " + fieldError.getField() + " " + fieldError.getDefaultMessage())
+                .collectList().flatMap(list -> {
+                    result.put("errors", list);
+                    result.put("timestamp", new Date());
+                    result.put("status", HttpStatus.BAD_REQUEST.value());
+                    return Mono.just(ResponseEntity.badRequest().body(result));
+                }));
+    }
+
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<PersonalBankLoan>> update(@RequestBody PersonalBankLoan account, @PathVariable String id) {
+        return loanService.findById(id).flatMap(c -> loanService.save(c)).map(p -> ResponseEntity.ok()
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(p))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Void>> eliminar(@PathVariable String id) {
+        return loanService.findById(id)
+                .flatMap(e -> loanService.delete(e)
+                        .then(Mono.just(new ResponseEntity<Void>(HttpStatus.NO_CONTENT))))
+                .defaultIfEmpty(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
 }
