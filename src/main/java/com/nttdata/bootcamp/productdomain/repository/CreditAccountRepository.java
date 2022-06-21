@@ -4,6 +4,7 @@ import com.nttdata.bootcamp.productdomain.model.CreditAccount;
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import reactor.core.publisher.Mono;
 
+/** Credit account repository.*/
 public interface CreditAccountRepository extends ReactiveMongoRepository<CreditAccount, String> {
-    Mono<CreditAccount> findByType(String type);
+  Mono<CreditAccount> findByType(String type);
 }
